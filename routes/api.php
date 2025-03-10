@@ -7,7 +7,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('welcome',function()
-{
-    return 'welco,e to api';
+Route::get('welcome', function () {
+    return 'welcome to api';
 });
