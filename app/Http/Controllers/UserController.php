@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use GuzzleHttp\Promise\Create;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -33,9 +33,13 @@ class UserController extends Controller
             'email'=>'required|string|email',
             'password'=>'required|string',
         ]);
-        if (!Auth) {
-            # code...
-        }
+        if (!Auth::attempt($request->only('email','password'))) 
+        return response()->json(['message' => 'invalid email or password'], 401);
+
+       $user= User::where('email',$request->email)->firstOrFail();
+       $token=$user->createToken('auth_Token')->plainTextToken;
+       return response()->json(['message'=>'user login Succeccfully','user'=>$user,'token'=>$token],201);
+
     }
 
     public function logout()
